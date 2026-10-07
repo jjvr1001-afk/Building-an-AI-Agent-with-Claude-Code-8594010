@@ -2,8 +2,9 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { generateText, stepCountIs, type StepResult } from 'ai';
 import { readFileSync } from 'node:fs';
 import { searchWeb } from '../tools/tavily.ts';
+import { addPreference, listPreferences, removePreference } from '../memory/preferences.ts';
 
-const MAX_STEPS = 5;
+const MAX_STEPS = 8;
 const MAX_SEARCHES_PER_STEP = 2;
 const FINAL_STEP_NOTICE =
   'Searching is now closed. Do not say you will search again. Write your complete prospect analysis now, ' +
@@ -22,7 +23,7 @@ function buildTools() {
       return searchWeb.execute!(input, options);
     },
   };
-  return { tools: { searchWeb: limitedSearchWeb }, resetStepCounter: () => void (callsThisStep = 0) };
+  return { tools: { searchWeb: limitedSearchWeb, listPreferences, addPreference, removePreference }, resetStepCounter: () => void (callsThisStep = 0) };
 }
 
 type Tools = ReturnType<typeof buildTools>['tools'];
