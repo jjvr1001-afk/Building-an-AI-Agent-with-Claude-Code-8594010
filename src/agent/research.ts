@@ -1,5 +1,8 @@
 import { anthropic } from '@ai-sdk/anthropic';
 import { generateText } from 'ai';
+import { readFileSync } from 'node:fs';
+
+const BRAIN_PROMPT_PATH = new URL('./prompts/brain.md', import.meta.url);
 
 export async function researchCompany(companyName: string): Promise<string> {
   // The provider treats an empty-string key as present and fails later with an opaque 401.
@@ -11,7 +14,8 @@ export async function researchCompany(companyName: string): Promise<string> {
 
   const result = await generateText({
     model: anthropic('claude-haiku-4-5'),
-    prompt: `Research ${companyName} as a sales prospect. Summarize what the company does and anything notable about it.`,
+    system: readFileSync(BRAIN_PROMPT_PATH, 'utf-8'),
+    prompt: `Research ${companyName} as a sales prospect.`,
   });
 
   return result.text;
