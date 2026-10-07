@@ -13,6 +13,8 @@ export const BLOCKED_DOMAINS = [
 ];
 
 const MAX_RESULTS = 5;
+// Tavily's `days` is a loose hint and returns stale items; over-fetch so the client-side recency filter still leaves MAX_RESULTS.
+const FETCH_RESULTS = 20;
 const DEFAULT_RECENCY_DAYS = 90;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -62,7 +64,7 @@ export const searchWeb = tool({
         query,
         topic: 'news',
         days,
-        max_results: MAX_RESULTS,
+        max_results: FETCH_RESULTS,
         exclude_domains: BLOCKED_DOMAINS,
       }),
     });
@@ -83,6 +85,7 @@ export const searchWeb = tool({
       if (!r.url || isBlocked(r.url)) continue;
       const ts = r.published_date ? Date.parse(r.published_date) : NaN;
       if (Number.isNaN(ts) || ts < cutoff) continue;
+      if (results.length === MAX_RESULTS) break;
       results.push({
         title: r.title ?? '',
         url: r.url,
