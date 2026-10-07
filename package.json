@@ -1,0 +1,21 @@
+{
+  "name": "ai-sales-prospecting-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsc --noEmit && node --env-file-if-exists=.env ./node_modules/vitest/vitest.mjs"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^2",
+    "@ai-sdk/mcp": "~0.0.18",
+    "ai": "^5",
+    "zod": "^4.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4",
+    "typescript": "^5",
+    "vitest": "^3"
+  }
+}
